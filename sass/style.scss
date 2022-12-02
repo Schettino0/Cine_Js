@@ -50,16 +50,21 @@
 .peliculas {
     display: flex;
     justify-content: center;
+    align-items: stretch;
     flex-wrap: wrap;
     gap: 0.2em;
     margin: 0 auto;
     width: 90%;
 }
 
+.hidden {
+    display: none;
+}
 .post {
     text-align: center;
     width: 18em;
     transition: 0.5s;
+
 
 
     .info {
@@ -72,9 +77,25 @@
         background: #E74C3C;
         width: 15em;
         opacity: 0;
-        transform: translateY(40%);
+        transform: translateY(8%);
         transition: 1.0s;
-        // display: none;
+        height: 7.8em;
+        overflow: hidden;
+    }
+
+    .ver {
+        height: 20em;
+        opacity: 1;
+    }
+
+    .infoExtra {
+        opacity: 0;
+        transition: 1.0s;
+    }
+
+    .verExtra {
+        opacity: 1;
+        transition: 1.0s;
     }
 
     img {
@@ -87,7 +108,7 @@
     }
 
     &:hover {
-    
+
         img {
             filter: blur(1px);
             opacity: 0.6;
@@ -95,8 +116,8 @@
         }
     }
 
-
     @include buttonStyle;
+
 }
 
 .buscar {
@@ -106,4 +127,3 @@
 .search {
     margin-right: 4em;
 }
-

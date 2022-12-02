@@ -61,11 +61,18 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   gap: 0.2em;
   margin: 0 auto;
   width: 90%;
+}
+
+.hidden {
+  display: none;
 }
 
 .post {
@@ -85,8 +92,27 @@
   background: #E74C3C;
   width: 15em;
   opacity: 0;
-  -webkit-transform: translateY(40%);
-          transform: translateY(40%);
+  -webkit-transform: translateY(8%);
+          transform: translateY(8%);
+  -webkit-transition: 1.0s;
+  transition: 1.0s;
+  height: 7.8em;
+  overflow: hidden;
+}
+
+.post .ver {
+  height: 20em;
+  opacity: 1;
+}
+
+.post .infoExtra {
+  opacity: 0;
+  -webkit-transition: 1.0s;
+  transition: 1.0s;
+}
+
+.post .verExtra {
+  opacity: 1;
   -webkit-transition: 1.0s;
   transition: 1.0s;
 }
