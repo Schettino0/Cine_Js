@@ -1,14 +1,19 @@
 let post = []
-//Cambio de paginas
 let pagina = 1
-const btnAnterior = document.getElementById("#btnAnterior")
-const btnSiguiente = document.getElementById("btnSiguiente")
-
+let carrito = []
 
 class funcionesCine {
     constructor(hora, entradas) {
         this.hora = hora
         this.entradas = entradas
+    }
+}
+class addCarrito {
+    constructor(titulo, entradas, funcion, precio) {
+        this.titulo = titulo
+        this.entradas = entradas
+        this.funcion = funcion
+        this.precio = precio * entradas
     }
 }
 
@@ -35,7 +40,6 @@ const input = document.querySelector("#buscador")
 const buscador = () => {
     input.addEventListener("keyup", (e) => {
         let datos = document.querySelector("#buscador").value
-        console.log(datos)
         const Titulospelis = document.querySelectorAll("#titulo")
         Titulospelis.forEach((e) => {
             const div = e.parentElement.parentElement
@@ -45,11 +49,13 @@ const buscador = () => {
                 div.classList.add("hidden")
             }
         })
-        // let busqueda = post.filter(titulo => datos = titulo.title)
-        // console.log(busqueda)
     })
 
+
+
 }
+
+
 
 
 const renderizarPeliculas = () => {
@@ -59,6 +65,7 @@ const renderizarPeliculas = () => {
         <div class="info">
             <h3 id="titulo">${e.title}</h3>
             <h5>${e.release_date}</h5>
+            <h6>⭐${e.vote_average}⭐</h6>
             <button id="btnHorarios">
                 <span class="button_top"> Ver Horarios
                 </span>
@@ -66,12 +73,12 @@ const renderizarPeliculas = () => {
             <div class="infoExtra">
                 <h4>Funciones: </h4>
         <div class="opciones">
-        <form class="formulario">
-        <input type="radio" name="horario" id="${e.id}-${e.horario[0].hora}">
+        <form class="formulario" id="${e.title}" data-id=${e.id}>
+        <input type="radio" name="horario" id="${e.id}-${e.horario[0].hora}" value=${e.horario[0].hora}>
         <label for="${e.id}-${e.horario[0].hora}">${e.horario[0].hora}</label>
-        <input type="radio" name="horario" id="${e.id}-${e.horario[1].hora}">
+        <input type="radio" name="horario" id="${e.id}-${e.horario[1].hora}" value=${e.horario[1].hora}>
         <label for="${e.id}-${e.horario[1].hora}">${e.horario[1].hora}</label>
-        <input type="radio" name="horario" id="${e.id}-${e.horario[2].hora}">
+        <input type="radio" name="horario" id="${e.id}-${e.horario[2].hora}" value=${e.horario[2].hora} >
         <label for="${e.id}-${e.horario[2].hora}">${e.horario[2].hora}</label><br>
         <div class="entradasDisp">
 
@@ -104,7 +111,6 @@ const mostrarHorarios = () => {
     btnHorarios.forEach((boton) => {
         boton.addEventListener('click', () => {
             const containerInfoExtra = boton.parentElement
-            console.log(containerInfoExtra)
             const infoExtra = containerInfoExtra.querySelector(".infoExtra")
             if (containerInfoExtra.classList.contains("ver")) {
                 containerInfoExtra.classList.remove("ver")
@@ -116,7 +122,64 @@ const mostrarHorarios = () => {
             }
         })
     })
+    formulario()
 }
+
+
+const formulario = () => {
+    const formulario = document.querySelectorAll(".formulario")
+    formulario.forEach((e) => {
+        e.addEventListener('submit', (x) => {
+            x.preventDefault()
+            const transactionFormData = new FormData(e)
+            const cantidad = transactionFormData.get("cantidad")
+            const funcion = transactionFormData.get("horario")
+            const titulo = e.getAttribute("id")
+            const id = e.getAttribute("data-id")
+            console.log(cantidad, funcion, titulo, id)
+            if (funcion == null) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Debes seleccionar una funcion!'
+                })
+            }
+            else {
+                console.log("Enviando informacion...")
+                agregarCarrito(cantidad, funcion, titulo, id)
+            }
+        })
+    })
+}
+
+const agregarCarrito = (cantidad, funcion, titulo, id) => {
+    const eleccion = post.find((i) => i.title == titulo)
+    const add = new addCarrito(eleccion.title, cantidad, funcion, 3250)
+    carrito.push(add)
+    console.log(carrito)
+    const carroJSON = JSON.stringify(carrito)
+    localStorage.setItem("carrito", carroJSON)
+    Swal.fire({
+        icon: 'success',
+        title: 'Excelente!',
+        html: `<h4>A sido agregado a tu carrito: <br> 
+        -${cantidad} Entradas para la pelicula ${titulo}, funcion: ${funcion}</h4>`,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ver Carrito',
+        cancelButtonColor: '#d33',
+        cancelButtonText: "Cerrar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            mostrarcarrito()
+        }
+    })
+}
+const cargarCarrito = () => {
+    carrito = JSON.parse(localStorage.getItem('carrito')) || []
+}
+
+
 
 let i = 0
 const agregarHorario = () => {
@@ -140,52 +203,11 @@ const agregarHorario = () => {
     })
 }
 
-//API CON TOP 100 MOVIES
-// const options = {
-//     method: 'GET',
-//     headers: {
-//         'X-RapidAPI-Key': '72949765c0msh3b252535d3e8281p14341bjsn3c3c6380cff5',
-//         'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com'
-//     }
-// };
-
-// fetch('https://imdb-top-100-movies.p.rapidapi.com/premiummovies', options)
-//     .then(response => response.json())
-//     .then(data => {
-//         post = data
-//         agregarHorario()
-//         renderizarPeliculas()
-//     })
-//     .catch(err => console.error(err));
-
-
-
-//API CON ANIME 
-
-// const options = {
-//     method: 'GET',
-//     headers: {
-//         'X-RapidAPI-Key': '72949765c0msh3b252535d3e8281p14341bjsn3c3c6380cff5',
-//         'X-RapidAPI-Host': 'anime-db.p.rapidapi.com'
-//     }
-// };
-
-// fetch('https://anime-db.p.rapidapi.com/anime?page=1&size=50', options)
-//     .then(response => response.json())
-//     .then(data => {
-//         post = Array.from(Object.values(data))
-//         post = post[0]
-//         agregarHorario()
-//         renderizarPeliculas()
-//     })
-//     .catch(err => console.error(err));
-
-//OTRA API
 
 
 
 
-
+///////// LISTA DE PELICULAS POPULARES /////////////////////
 
 const cargarPeliculasDesdeApi = () => {
     fetch(`https://api.themoviedb.org/3/movie/popular?api_key=5200c04c925bb6f8991389511d06f494&language=es-MX&page=${pagina}`)
@@ -193,26 +215,73 @@ const cargarPeliculasDesdeApi = () => {
         .then(data => {
             post = Array.from(Object.values(data))
             post = post[1]
-            console.log(post)
             agregarHorario()
             renderizarPeliculas()
         })
         .catch(err => console.error(err));
 }
 
-cargarPeliculasDesdeApi()
-buscador()
+//BUSCADOR DE PELICULAS /////////////////////////////////
+const inputBuscador = document.getElementById("buscador")
+const divCambiarPagina = document.getElementsByClassName("cambiarPagina")
+inputBuscador.addEventListener('keyup', (e) => {
+    if (e.code === 'Enter') {
+        buscarPeliculaEnApi()
+    }
+})
 
-btnSiguiente.addEventListener('click',()=>{
-    if(pagina<1000){
-        pagina +=1
-        peliculasContainer.innerHTML= ""
+const buscarPeliculaEnApi = () => {
+    const valorBuscado = inputBuscador.value
+    fetch(`https://api.themoviedb.org/3/search/movie?api_key=5200c04c925bb6f8991389511d06f494&language=es-MX&query=${valorBuscado}&page=1&include_adult=false`)
+        .then(responde => responde.json())
+        .then(data => {
+            peliculasContainer.innerHTML = ""
+            post = Array.from(Object.values(data))
+            post = post[1]
+            agregarHorario()
+            renderizarPeliculas()
+        })
+}
+/////////////////////////////////////////////////////////
+
+const peliculasRecientes = () => {
+    pagina = 1
+    console.log("Hola" , pagina)
+    peliculasContainer.innerHTML = ""
+    cargarPeliculasDesdeApi()
+}
+const peliculasAntiguas = () => {
+    pagina = 3
+    console.log("Hola")
+    peliculasContainer.innerHTML = ""
+    cargarPeliculasDesdeApi()
+}
+
+
+//PAGINAS/////////////////////////////////////////////////
+const btnAnterior = document.getElementById("btnAnterior")
+const btnSiguiente = document.getElementById("btnSiguiente")
+const spanPagina = document.getElementById("pagina")
+
+btnSiguiente.addEventListener('click', () => {
+    if (pagina < 1000) {
+        pagina += 1
+        spanPagina.innerText = pagina
+        peliculasContainer.innerHTML = ""
+
         cargarPeliculasDesdeApi()
     }
 })
-btnAnterior.addEventListener('click',()=>{
-    if(pagina>1){
-        pagina -=1
+btnAnterior.addEventListener('click', () => {
+    if (pagina > 1) {
+        pagina -= 1
+        spanPagina.innerText = pagina
+        peliculasContainer.innerHTML = ""
         cargarPeliculasDesdeApi()
     }
 })
+///////////////////////////////////////////////////////////
+cargarCarrito()
+cargarPeliculasDesdeApi()
+mostrarHorarios()
+buscador()

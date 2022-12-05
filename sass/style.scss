@@ -9,7 +9,7 @@
 
 .container__header {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     min-width: 70px;
     background-color: white;
     align-items: center;
@@ -65,7 +65,8 @@
     text-align: center;
     width: 16em;
     transition: 0.5s;
-    h3{
+
+    h3 {
         font-size: 1.2em;
     }
 
@@ -138,41 +139,95 @@
 //Formulario
 
 .opciones {
-    .formulario{
-        button{
+    .formulario {
+        button {
             margin: 1em auto;
         }
-        select{
+
+        select {
             font-size: 1em;
             border: solid 2px rgb(0, 0, 0);
         }
 
     }
+
     input[type=radio] {
         display: none;
-        &:checked + label{
+
+        &:checked+label {
             background: #4BB543;
             color: white;
             transition: 0.5s;
-        }  
+        }
     }
 
     label {
         background: white;
         color: black;
         border-radius: 0.3em;
-        padding: 0.2em;      
+        padding: 0.2em;
     }
-    form{
+
+    form {
         margin: 0.5em 0 0.5em 0;
     }
-    .button_top{
 
-    }
-    .button_top:hover{
+    .button_top {}
+
+    .button_top:hover {
         transform: translateY(-0.33em);
     }
+
     .button_top:active {
         transform: translateY(0);
     }
 }
+
+.cambiarPagina {
+    z-index: 3;
+    text-align: center;
+    background-color: #252525;
+    height: auto;
+
+    button {
+        background: white;
+        font-size: 1em;
+        padding: 10px;
+        border-radius: 10px;
+        transition: 0.5s;
+
+        &:hover {
+            transform: translateY(-6px);
+
+        }
+    }
+
+    span {
+        color: white;
+        font-size: 2em;
+        padding: 0 2em;
+    }
+}
+
+@media screen and (max-width: 768px) {
+        body {
+            width: 100%;
+        }
+        .container__header{
+            display: flex;
+            flex-direction: column;
+        }
+        .post{
+            width: 8em;
+            height: 13em;
+            img{
+                width: 8em;
+            }
+            .info{
+                width: 7.5em;
+            }
+        }
+        .peliculas{
+            
+        }
+    }
