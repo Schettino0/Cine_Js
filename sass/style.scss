@@ -8,6 +8,8 @@
 }
 
 .container__header {
+    @include switch;
+
     display: flex;
     justify-content: space-evenly;
     min-width: 70px;
@@ -65,6 +67,7 @@
     text-align: center;
     width: 16em;
     transition: 0.5s;
+    height: 25em;
 
     h3 {
         font-size: 1.2em;
@@ -74,12 +77,13 @@
 
     .info {
         position: relative;
-        bottom: 5em;
+        bottom: 13em;
         border-radius: 10px;
         left: 0.5em;
         z-index: 3;
         color: white;
-        background: #E74C3C;
+        // background: #E74C3C;
+        background-color: #252525c2;
         width: 15em;
         opacity: 0;
         transform: translateY(0);
@@ -89,9 +93,11 @@
     }
 
     .ver {
-        transition: 0.5s;
-        height: 24em;
+        transition: 1.0s;
+        height: auto;
         opacity: 1;
+        position: relative;
+        bottom: 22.9em;
     }
 
     .infoExtra {
@@ -172,7 +178,6 @@
         margin: 0.5em 0 0.5em 0;
     }
 
-    .button_top {}
 
     .button_top:hover {
         transform: translateY(-0.33em);
@@ -218,16 +223,23 @@
             flex-direction: column;
         }
         .post{
-            width: 8em;
+            width: 11em;
             height: 13em;
+            bottom: 19.9em;
             img{
                 width: 8em;
             }
+            .ver{
+                height: auto!important;
+            }
             .info{
-                width: 7.5em;
+                width: 10em;
+                height: 12em    ;
             }
         }
         .peliculas{
-            
+            width: 100.1%;
         }
     }
+
+    

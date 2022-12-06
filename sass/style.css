@@ -7,6 +7,9 @@
 }
 
 .container__header {
+  /* The switch - the box around the slider */
+  /* Hide default HTML checkbox */
+  /* The slider */
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -18,6 +21,79 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.container__header .switch {
+  font-size: 17px;
+  position: relative;
+  display: inline-block;
+  width: 3.5em;
+  height: 2em;
+}
+
+.container__header .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.container__header .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 30px;
+}
+
+.container__header .slider:before {
+  position: absolute;
+  content: "";
+  height: 1.4em;
+  width: 1.4em;
+  border-radius: 20px;
+  left: 0.3em;
+  bottom: 0.3em;
+  background-color: #dbc602;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.container__header input:checked + .slider {
+  background-color: #000000;
+}
+
+.container__header input:focus + .slider {
+  -webkit-box-shadow: 0 0 1px #000000;
+          box-shadow: 0 0 1px #000000;
+}
+
+.container__header input:checked + .slider:before {
+  -webkit-transform: translateX(1.5em);
+          transform: translateX(1.5em);
+}
+
+.container__header .slider::after {
+  width: 20px;
+  height: 20px;
+  left: 20%;
+  top: 10%;
+  border-radius: 50%;
+  position: absolute;
+  content: "";
+  background-color: black;
+  -webkit-transition: ease 0.4s;
+  transition: ease 0.4s;
+}
+
+.container__header input:checked + .slider::after {
+  left: 80%;
+  width: 0px;
+  height: 0px;
 }
 
 .container__header--navmenu li {
@@ -80,6 +156,7 @@
   width: 16em;
   -webkit-transition: 0.5s;
   transition: 0.5s;
+  height: 25em;
 }
 
 .post h3 {
@@ -88,12 +165,12 @@
 
 .post .info {
   position: relative;
-  bottom: 5em;
+  bottom: 13em;
   border-radius: 10px;
   left: 0.5em;
   z-index: 3;
   color: white;
-  background: #E74C3C;
+  background-color: #252525c2;
   width: 15em;
   opacity: 0;
   -webkit-transform: translateY(0);
@@ -105,10 +182,12 @@
 }
 
 .post .ver {
-  -webkit-transition: 0.5s;
-  transition: 0.5s;
-  height: 24em;
+  -webkit-transition: 1.0s;
+  transition: 1.0s;
+  height: auto;
   opacity: 1;
+  position: relative;
+  bottom: 22.9em;
 }
 
 .post .infoExtra {
@@ -380,14 +459,22 @@
             flex-direction: column;
   }
   .post {
-    width: 8em;
+    width: 11em;
     height: 13em;
+    bottom: 19.9em;
   }
   .post img {
     width: 8em;
   }
+  .post .ver {
+    height: auto !important;
+  }
   .post .info {
-    width: 7.5em;
+    width: 10em;
+    height: 12em;
+  }
+  .peliculas {
+    width: 100.1%;
   }
 }
 /*# sourceMappingURL=style.css.map */

@@ -70,6 +70,10 @@ const renderizarPeliculas = () => {
                 <span class="button_top"> Ver Horarios
                 </span>
             </button>
+            <button id="btntrailer">
+            <span class="button_top"> Ver Trailer
+            </span>
+        </button>
             <div class="infoExtra">
                 <h4>Funciones: </h4>
         <div class="opciones">
@@ -104,6 +108,9 @@ const renderizarPeliculas = () => {
     })
     mostrarHorarios()
 }
+
+
+
 
 
 const mostrarHorarios = () => {
@@ -150,6 +157,7 @@ const formulario = () => {
             }
         })
     })
+    trailer()
 }
 
 const agregarCarrito = (cantidad, funcion, titulo, id) => {
@@ -203,6 +211,43 @@ const agregarHorario = () => {
     })
 }
 
+const trailer =  () => {
+    const btnTrailer = document.querySelectorAll("#btntrailer")
+    btnTrailer.forEach((e) => {
+        e.addEventListener('click', () => {
+            const divID = e.parentElement.parentElement
+            const id = divID.getAttribute("data-id")
+            fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=5200c04c925bb6f8991389511d06f494`)
+                .then(response => response.json())
+                .then(trailer => {
+                    let video = Array.from(Object.values(trailer))
+                    console.log(video)
+                    let trailerVideo = video[1].find((e) => e.name == "Official Trailer")
+                    if(trailerVideo){
+                        console.log(trailerVideo.key)
+                        let link = "https://www.youtube.com/watch?v=" + trailerVideo.key
+                        window.open(link, '_blank')
+                        console.log(link)
+                    }
+                    else{
+                        trailerVideo = video[1].find((e)=> e.name = "Official Trailer")
+                        link = "https://www.youtube.com/watch?v="+trailerVideo.key
+                        window.open(link, '_blank')
+
+                    }
+                })
+                .catch(err => {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'No encontramos el Trailer!'
+                    })
+                });
+        })
+
+    })
+}
 
 
 
@@ -246,16 +291,20 @@ const buscarPeliculaEnApi = () => {
 
 const peliculasRecientes = () => {
     pagina = 1
-    console.log("Hola" , pagina)
+    console.log("Hola", pagina)
     peliculasContainer.innerHTML = ""
     cargarPeliculasDesdeApi()
 }
 const peliculasAntiguas = () => {
-    pagina = 3
+    pagina = 15
     console.log("Hola")
     peliculasContainer.innerHTML = ""
     cargarPeliculasDesdeApi()
 }
+
+
+
+
 
 
 //PAGINAS/////////////////////////////////////////////////
