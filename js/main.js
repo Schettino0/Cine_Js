@@ -1,6 +1,7 @@
 let post = []
 let pagina = 1
 let carrito = []
+const divCarrito = document.getElementById("carrito")
 
 class funcionesCine {
     constructor(hora, entradas) {
@@ -9,11 +10,13 @@ class funcionesCine {
     }
 }
 class addCarrito {
-    constructor(titulo, entradas, funcion, precio) {
+    constructor(titulo, entradas, funcion, precio, id, poster) {
         this.titulo = titulo
         this.entradas = entradas
         this.funcion = funcion
         this.precio = precio * entradas
+        this.id = id
+        this.poster = `https://image.tmdb.org/t/p/w500${poster}`
     }
 }
 
@@ -50,9 +53,6 @@ const buscador = () => {
             }
         })
     })
-
-
-
 }
 
 
@@ -162,7 +162,7 @@ const formulario = () => {
 
 const agregarCarrito = (cantidad, funcion, titulo, id) => {
     const eleccion = post.find((i) => i.title == titulo)
-    const add = new addCarrito(eleccion.title, cantidad, funcion, 3250)
+    const add = new addCarrito(eleccion.title, cantidad, funcion, 3250, id, eleccion.poster_path)
     carrito.push(add)
     console.log(carrito)
     const carroJSON = JSON.stringify(carrito)
@@ -179,15 +179,34 @@ const agregarCarrito = (cantidad, funcion, titulo, id) => {
         cancelButtonText: "Cerrar"
     }).then((result) => {
         if (result.isConfirmed) {
-            mostrarcarrito()
+            abrirCarro()
         }
     })
 }
 const cargarCarrito = () => {
     carrito = JSON.parse(localStorage.getItem('carrito')) || []
 }
+const ubicacionCarrito = document.getElementById("items")
 
-
+const armarCarro = () => {
+    ubicacionCarrito.innerHTML = ""
+    let total = 0
+    const alReves = carrito.reverse()
+    alReves.forEach((e) => {
+        const htmlCarrito = `<tr>
+        <td>${e.id}</td>
+        <td><img id="miniposter" src="${e.poster}"></td>
+        <td>${e.titulo}</td>
+        <td>${e.funcion}</td>
+        <td>${e.entradas}</td>
+        <td>${e.precio}</td>
+        <td><i id="eliminar" class="fa-solid fa-trash"></i></td>
+        </tr>`
+        total += e.precio
+        ubicacionCarrito.innerHTML += htmlCarrito
+        document.getElementById("total").innerText = `Total : $ ${total}`
+    })
+}
 
 let i = 0
 const agregarHorario = () => {
@@ -210,8 +229,28 @@ const agregarHorario = () => {
 
     })
 }
+const abrirCarro = () => {
+    if (carrito == "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Tu Carrito esta vacio!'
+        })
+    }
+    else {
+        armarCarro()
+        if (divCarrito.style.opacity == "0") {
+            divCarrito.style.opacity = "1"
+            divCarrito.style.zIndex = "3"
+        }
+        else {
+            divCarrito.style.opacity = "0"
+            divCarrito.style.zIndex = "1"
+        }
+    }
+}
 
-const trailer =  () => {
+const trailer = () => {
     const btnTrailer = document.querySelectorAll("#btntrailer")
     btnTrailer.forEach((e) => {
         e.addEventListener('click', () => {
@@ -223,15 +262,15 @@ const trailer =  () => {
                     let video = Array.from(Object.values(trailer))
                     console.log(video)
                     let trailerVideo = video[1].find((e) => e.name == "Official Trailer")
-                    if(trailerVideo){
+                    if (trailerVideo) {
                         console.log(trailerVideo.key)
                         let link = "https://www.youtube.com/watch?v=" + trailerVideo.key
                         window.open(link, '_blank')
                         console.log(link)
                     }
-                    else{
-                        trailerVideo = video[1].find((e)=> e.name = "Official Trailer")
-                        link = "https://www.youtube.com/watch?v="+trailerVideo.key
+                    else {
+                        trailerVideo = video[1].find((e) => e.name = "Official Trailer")
+                        link = "https://www.youtube.com/watch?v=" + trailerVideo.key
                         window.open(link, '_blank')
 
                     }
@@ -248,6 +287,7 @@ const trailer =  () => {
 
     })
 }
+
 
 
 
@@ -274,18 +314,27 @@ inputBuscador.addEventListener('keyup', (e) => {
         buscarPeliculaEnApi()
     }
 })
-
 const buscarPeliculaEnApi = () => {
     const valorBuscado = inputBuscador.value
-    fetch(`https://api.themoviedb.org/3/search/movie?api_key=5200c04c925bb6f8991389511d06f494&language=es-MX&query=${valorBuscado}&page=1&include_adult=false`)
-        .then(responde => responde.json())
-        .then(data => {
-            peliculasContainer.innerHTML = ""
-            post = Array.from(Object.values(data))
-            post = post[1]
-            agregarHorario()
-            renderizarPeliculas()
+    if (valorBuscado) {
+        fetch(`https://api.themoviedb.org/3/search/movie?api_key=5200c04c925bb6f8991389511d06f494&language=es-MX&query=${valorBuscado}&page=1&include_adult=false`)
+            .then(responde => responde.json())
+            .then(data => {
+                peliculasContainer.innerHTML = ""
+                post = Array.from(Object.values(data))
+                post = post[1]
+                agregarHorario()
+                renderizarPeliculas()
+            })
+    }
+    else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'No ingresaste nada para buscar!'
         })
+
+    }
 }
 /////////////////////////////////////////////////////////
 
@@ -302,7 +351,14 @@ const peliculasAntiguas = () => {
     cargarPeliculasDesdeApi()
 }
 
+const limpiarCarrito = () => {
+    localStorage.removeItem("carrito")
+    divCarrito.style.opacity = "0"
+    divCarrito.style.zIndex = "1"
+    cargarCarrito()
 
+
+}
 
 
 
@@ -330,6 +386,7 @@ btnAnterior.addEventListener('click', () => {
     }
 })
 ///////////////////////////////////////////////////////////
+armarCarro()
 cargarCarrito()
 cargarPeliculasDesdeApi()
 mostrarHorarios()

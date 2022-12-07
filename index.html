@@ -24,7 +24,7 @@
                     <li><a href="index.html">Inicio</a></li>
                     <li><a href="#" onclick="peliculasAntiguas()">Peliculas</a></li>
                     <li><a href="#" onclick="peliculasRecientes()">Estrenos</a></li>
-                    <li><a href="#"> <i class="fa-sharp fa-solid fa-cart-shopping"></i></a></li>
+                    <li><a href="#" onclick="abrirCarro()"> <i class="fa-sharp fa-solid fa-cart-shopping"></i></a></li>
                 </ul>
             </div>
             <div class="search">
@@ -56,7 +56,32 @@
         <button id="btnSiguiente">Siguiente</button>
     </div>
 
-    <div class="carrito">
+    <div id="carrito" style="opacity: 0; transition: 0.7s; z-index: 1;">
+        <div class="top">
+            <h2>Entradas en tu carrito:</h2>
+            <i onclick="abrirCarro()" id="cerrar" class="fa-regular fa-rectangle-xmark"></i>
+        </div> 
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Poster</th>
+                    <th>Pelicula</th>
+                    <th>Funcion</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody id="items">
+
+            </tbody>
+        </table>
+        <h2 id="total">Total: $</h2>
+        <div class="botones">
+            <button>Confirmar Compra</button>
+            <button onclick="limpiarCarrito()">Limpiar Carrito</button>
+        </div>
     </div>
 
 
