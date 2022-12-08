@@ -15,7 +15,7 @@ class addCarrito {
         this.entradas = entradas
         this.funcion = funcion
         this.precio = precio * entradas
-        this.id = id
+        this.id = `${id}${entradas}${funcion.split(":",1)}`
         this.poster = `https://image.tmdb.org/t/p/w500${poster}`
     }
 }
@@ -193,7 +193,7 @@ const armarCarro = () => {
     let total = 0
     const alReves = carrito.reverse()
     alReves.forEach((e) => {
-        const htmlCarrito = `<tr>
+        const htmlCarrito = `<tr id=${e.id}>
         <td>${e.id}</td>
         <td><img id="miniposter" src="${e.poster}"></td>
         <td>${e.titulo}</td>
@@ -204,9 +204,37 @@ const armarCarro = () => {
         </tr>`
         total += e.precio
         ubicacionCarrito.innerHTML += htmlCarrito
-        document.getElementById("total").innerText = `Total : $ ${total}`
     })
+    document.getElementById("total").innerText = `Total : $ ${total}`
+    if(total == 0){
+        divCarrito.style.opacity = "0"
+        divCarrito.style.zIndex = "1"
+
+    }
+    eliminarDelCarro()
 }
+
+//ELIMINAR DEL CARRITO//
+const eliminarDelCarro = () =>{
+    const btnEliminar = document.querySelectorAll("#eliminar")
+    btnEliminar.forEach((e)=>{
+        e.addEventListener('click',()=>{
+            // e.parentElement.parentElement.remove()
+            let containerID = e.parentElement.parentElement
+            const busqueda = carrito.find((e)=> e.id == containerID.getAttribute("id"))
+            const index = carrito.indexOf(busqueda)
+            carrito.splice(index,1)
+            const carroJSON = JSON.stringify(carrito)
+            localStorage.setItem("carrito", carroJSON)
+            containerID.remove()
+            armarCarro()
+        })
+    })
+
+}
+
+
+
 
 let i = 0
 const agregarHorario = () => {
@@ -336,6 +364,11 @@ const buscarPeliculaEnApi = () => {
 
     }
 }
+
+
+
+
+
 /////////////////////////////////////////////////////////
 
 const peliculasRecientes = () => {
@@ -356,10 +389,27 @@ const limpiarCarrito = () => {
     divCarrito.style.opacity = "0"
     divCarrito.style.zIndex = "1"
     cargarCarrito()
-
-
 }
 
+
+
+
+//CONFIRMAR COMPRA//
+const btnConfirmar = document.getElementById("confirmarCompra")
+btnConfirmar.addEventListener('click', () => {
+    Swal.fire({
+        icon: 'success',
+        title: 'Seras redirigido al sitio para pagar...!',
+        showCancelButton: false,
+    })
+    irAPagar()
+})
+
+const irAPagar = () => {
+    setTimeout(() => {
+        window.open("https://cdn.memegenerator.es/imagenes/memes/full/17/23/17233270.jpg", '_blank')
+    }, 2000);
+}
 
 
 
@@ -386,6 +436,7 @@ btnAnterior.addEventListener('click', () => {
     }
 })
 ///////////////////////////////////////////////////////////
+
 armarCarro()
 cargarCarrito()
 cargarPeliculasDesdeApi()

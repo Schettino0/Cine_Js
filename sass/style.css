@@ -479,10 +479,10 @@
 }
 
 #carrito {
-  position: -webkit-sticky;
-  position: sticky;
+  position: fixed;
   z-index: 3;
-  bottom: 20em;
+  left: 25%;
+  bottom: 2em;
   margin: 2em auto;
   width: 50%;
   background: #252525;
